@@ -369,69 +369,7 @@
         <div id="glucose-modal" class="detail-modal flex-col pointer-events-auto"><header class="p-4 flex items-center border-b"><button class="close-detail-modal-btn text-purple-500 dark:text-purple-400"><i class="fas fa-chevron-left mr-2"></i> Voltar</button><h2 class="text-lg font-bold screen-title mx-auto">Registrar Glicose</h2></header><div class="flex-1 p-6 flex flex-col items-center justify-center overflow-y-auto"><div id="glucose-slider-container" class="slider-container"><input type="number" id="glucose-display-value" class="slider-value-display" value="120"><div class="screen-subtitle mb-4">mg/dL</div><div class="slider-track"><div class="slider-thumb"></div></div></div><div class="mt-8 w-full max-w-xs space-y-4"><label for="glucose-timestamp-input" class="screen-subtitle -mb-3 block text-sm">Data e Hora</label><input type="datetime-local" id="glucose-timestamp-input" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"><label for="glucose-situation-select" class="screen-subtitle -mb-3 block text-sm">Situação</label><select id="glucose-situation-select" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"><option>Geral</option><option>Em Jejum</option><option>Antes do Café da Manhã</option><option>Depois do Café da Manhã</option><option>Antes do Almoço</option><option>Depois do Almoço</option><option>Antes do Jantar</option><option>Depois do Jantar</option><option>Ao Deitar</option><option>De Madrugada</option><option>Antes do Exercício</option><option>Depois do Exercício</option></select><label for="glucose-notes-input" class="screen-subtitle -mb-3 block text-sm">Notas</label><textarea id="glucose-notes-input" placeholder="Ex: Estresse, pós-exercício..." rows="3" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></textarea></div></div><footer class="p-4 border-t"><button class="save-btn w-full font-bold py-3 px-4 primary-btn" data-type="glucose"><span class="btn-content">Salvar Glicose</span><span class="btn-loader"></span><span class="btn-success"><i class="fas fa-check"></i></span></button></footer></div>
         <div id="insulin-modal" class="detail-modal flex-col pointer-events-auto"><header class="p-4 flex items-center border-b"><button class="close-detail-modal-btn text-purple-500 dark:text-purple-400"><i class="fas fa-chevron-left mr-2"></i> Voltar</button><h2 class="text-lg font-bold screen-title mx-auto">Registrar Insulina</h2></header><div class="flex-1 p-6 flex flex-col items-center justify-center overflow-y-auto"><div id="insulin-slider-container" class="slider-container"><input type="number" step="0.5" id="insulin-display-value" class="slider-value-display" value="0.0"><div class="screen-subtitle mb-4">unidades</div><div class="slider-track"><div class="slider-thumb"></div></div></div><div class="mt-8 w-full max-w-xs space-y-4"><div class="space-y-2"><label class="screen-subtitle block">Tipo</label><div class="flex space-x-2"><button class="insulin-type-btn flex-1 p-3 border rounded-lg bg-purple-500 text-white border-purple-500" data-type="Bolus (Lispro)">Bolus</button><button class="insulin-type-btn flex-1 p-3 border dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200" data-type="Basal (Glargina)">Basal</button></div></div><div class="space-y-2"><label for="insulin-timestamp-input" class="screen-subtitle block text-sm">Data e Hora</label><input type="datetime-local" id="insulin-timestamp-input" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></div><div class="space-y-2"><label for="insulin-notes-input" class="screen-subtitle block text-sm">Notas</label><textarea id="insulin-notes-input" placeholder="Ex: Novo local de aplicação..." rows="3" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></textarea></div></div></div><footer class="p-4 border-t"><button class="save-btn w-full font-bold py-3 px-4 primary-btn" data-type="insulin"><span class="btn-content">Salvar Insulina</span><span class="btn-loader"></span><span class="btn-success"><i class="fas fa-check"></i></span></button></footer></div>
         
-        <div id="meal-modal" class="detail-modal flex-col pointer-events-auto"><header class="p-4 flex items-center border-b"><button class="close-detail-modal-btn text-purple-500 dark:text-purple-400"><i class="fas fa-chevron-left mr-2"></i> Voltar</button><h2 class="text-lg font-bold screen-title mx-auto">Registrar Refeição</h2></header><div class="flex-1 p-4 space-y-4 overflow-y-auto"><div<div class="glass-effect p-3 rounded-2xl mt-4">
-        <h4 class="font-bold screen-title mb-2">Adicionar Item Manualmente</h4>
-        <div class="space-y-3">
-            <input type="text" id="manual-food-name-input" placeholder="Nome do Alimento (ex: Arroz)" class="w-full p-3">
-            <div class="flex items-center space-x-2">
-                <input type="number" id="manual-food-carbs-input" placeholder="Carbs (g)" class="w-1/2 p-3">
-                <button id="add-manual-food-btn" class="flex-1 bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition h-[54px]">Adicionar</button>
-            </div>
-        </div>
-    </div>
-    ```
-
----
-
-### 2. Alterações no JavaScript
-
-Agora, no seu `<script type="module">`, precisamos adicionar a lógica para o novo botão "Adicionar".
-
-#### A. Adicionar o Event Listener
-
-Encontre o seu listener de clique principal (procure por `document.body.addEventListener('click', (e) => { ... })`). Dentro dessa função, adicione este novo bloco `if`:
-
-```javascript
-                // NOVO: Listener para o botão de adicionar refeição manual
-                const addManualFoodBtn = target.closest('#add-manual-food-btn');
-                if (addManualFoodBtn) {
-                    triggerHapticFeedback('light');
-                    
-                    const nameInput = document.getElementById('manual-food-name-input');
-                    const carbsInput = document.getElementById('manual-food-carbs-input');
-
-                    const name = nameInput.value.trim();
-                    const carbs = parseFloat(carbsInput.value.replace(',', '.'));
-
-                    if (!name) {
-                        showToast("Por favor, insira o nome do alimento.");
-                        return;
-                    }
-                    if (isNaN(carbs) || carbs < 0) {
-                        showToast("Por favor, insira um valor de carboidratos válido.");
-                        return;
-                    }
-
-                    // Cria o objeto de comida no formato que o app espera
-                    const manualFood = {
-                        id: 'manual_' + Date.now(),
-                        name: name,
-                        portion: 'Manual', // Define uma porção padrão
-                        carbs: carbs
-                    };
-
-                    // Adiciona na lista da refeição atual
-                    currentMeal.push({ food: manualFood, quantity: 1 });
-                    
-                    // Atualiza o resumo
-                    updateMealSummary();
-                    showToast("Item adicionado com sucesso!");
-
-                    // Limpa os campos para o próximo item
-                    nameInput.value = '';
-                    carbsInput.value = '';
-                } class="flex items-center space-x-2"><div class="relative flex-grow"><input type="text" id="food-search-input" placeholder="Descreva sua refeição com IA..." class="w-full p-3 pl-10 focus:ring-2 focus:ring-purple-500 focus:outline-none"><i class="fas fa-magic absolute left-3 top-3.5 text-gray-400"></i></div><button id="photo-meal-btn" class="bg-purple-600 text-white w-12 h-12 rounded-lg flex items-center justify-center shadow-sm hover:bg-purple-700 transition flex-shrink-0"><i class="fas fa-camera text-xl"></i></button></div><div id="ai-photo-analysis-section" class="hidden"></div><div id="search-results"></div><input type="file" id="meal-photo-input" class="hidden" accept="image/*" capture="environment"><div class="grid grid-cols-2 gap-4"><div><label for="meal-timestamp-input" class="screen-subtitle mb-1 block text-sm">Data e Hora</label><input type="datetime-local" id="meal-timestamp-input" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></div><div><label for="meal-type-select" class="screen-subtitle mb-1 block text-sm">Tipo</label><select id="meal-type-select" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none h-[54px]"><option>Café da Manhã</option><option>Almoço</option><option>Jantar</option><option>Lanche</option></select></div></div><div id="current-meal-summary" class="glass-effect p-3 rounded-2xl"><h3 class="font-bold screen-title">Itens da Refeição</h3><div id="current-meal-items" class="text-sm screen-subtitle mt-2 max-h-32 overflow-y-auto space-y-1"></div><div class="flex justify-between font-bold text-lg mt-2 border-t dark:border-gray-700 pt-2 screen-title"><span>Total de Carboidratos:</span><span id="total-carbs">0g</span></div></div><div><label for="meal-notes-input" class="screen-subtitle mb-1 block text-sm">Notas</label><textarea id="meal-notes-input" placeholder="Ex: Comi fora, me senti bem..." rows="2" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></textarea></div></div><footer class="p-4 border-t space-y-2"><button class="save-btn w-full font-bold py-3 px-4 primary-btn" data-type="meal"><span class="btn-content">Salvar Refeição</span><span class="btn-loader"></span><span class="btn-success"><i class="fas fa-check"></i></span></button></footer></div>
-
+        <div id="meal-modal" class="detail-modal flex-col pointer-events-auto"><header class="p-4 flex items-center border-b"><button class="close-detail-modal-btn text-purple-500 dark:text-purple-400"><i class="fas fa-chevron-left mr-2"></i> Voltar</button><h2 class="text-lg font-bold screen-title mx-auto">Registrar Refeição</h2></header><div class="flex-1 p-4 space-y-4 overflow-y-auto"><div class="flex items-center space-x-2"><div class="relative flex-grow"><input type="text" id="food-search-input" placeholder="Descreva sua refeição com IA..." class="w-full p-3 pl-10 focus:ring-2 focus:ring-purple-500 focus:outline-none"><i class="fas fa-magic absolute left-3 top-3.5 text-gray-400"></i></div><button id="photo-meal-btn" class="bg-purple-600 text-white w-12 h-12 rounded-lg flex items-center justify-center shadow-sm hover:bg-purple-700 transition flex-shrink-0"><i class="fas fa-camera text-xl"></i></button></div><div id="ai-photo-analysis-section" class="hidden"></div><div id="search-results"></div><input type="file" id="meal-photo-input" class="hidden" accept="image/*" capture="environment"><div class="grid grid-cols-2 gap-4"><div><label for="meal-timestamp-input" class="screen-subtitle mb-1 block text-sm">Data e Hora</label><input type="datetime-local" id="meal-timestamp-input" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></div><div><label for="meal-type-select" class="screen-subtitle mb-1 block text-sm">Tipo</label><select id="meal-type-select" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none h-[54px]"><option>Café da Manhã</option><option>Almoço</option><option>Jantar</option><option>Lanche</option></select></div></div><div id="current-meal-summary" class="glass-effect p-3 rounded-2xl"><h3 class="font-bold screen-title">Itens da Refeição</h3><div id="current-meal-items" class="text-sm screen-subtitle mt-2 max-h-32 overflow-y-auto space-y-1"></div><div class="flex justify-between font-bold text-lg mt-2 border-t dark:border-gray-700 pt-2 screen-title"><span>Total de Carboidratos:</span><span id="total-carbs">0g</span></div></div><div><label for="meal-notes-input" class="screen-subtitle mb-1 block text-sm">Notas</label><textarea id="meal-notes-input" placeholder="Ex: Comi fora, me senti bem..." rows="2" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></textarea></div></div><footer class="p-4 border-t space-y-2"><button class="save-btn w-full font-bold py-3 px-4 primary-btn" data-type="meal"><span class="btn-content">Salvar Refeição</span><span class="btn-loader"></span><span class="btn-success"><i class="fas fa-check"></i></span></button></footer></div>
         <div id="activity-modal" class="detail-modal flex-col pointer-events-auto"><header class="p-4 flex items-center border-b"><button class="close-detail-modal-btn text-purple-500 dark:text-purple-400"><i class="fas fa-chevron-left mr-2"></i> Voltar</button><h2 class="text-lg font-bold screen-title mx-auto">Registrar Atividade</h2></header><div class="flex-1 p-6 flex flex-col items-center justify-center overflow-y-auto"><div id="activity-slider-container" class="slider-container"><input type="number" step="5" id="activity-display-value" class="slider-value-display" value="30"><div class="screen-subtitle mb-4">minutos</div><div class="slider-track"><div class="slider-thumb"></div></div></div><div class="mt-8 w-full max-w-xs space-y-4"><label for="activity-timestamp-input" class="screen-subtitle -mb-3 block text-sm">Data e Hora</label><input type="datetime-local" id="activity-timestamp-input" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"><label for="activity-notes-input" class="screen-subtitle -mb-3 block text-sm">Notas</label><textarea id="activity-notes-input" placeholder="Ex: Caminhada leve..." rows="3" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></textarea></div></div><footer class="p-4 border-t"><button class="save-btn w-full font-bold py-3 px-4 primary-btn" data-type="activity"><span class="btn-content">Salvar Atividade</span><span class="btn-loader"></span><span class="btn-success"><i class="fas fa-check"></i></span></button></footer></div>
         <div id="medication-modal" class="detail-modal flex-col pointer-events-auto"><header class="p-4 flex items-center border-b"><button class="close-detail-modal-btn text-purple-500 dark:text-purple-400"><i class="fas fa-chevron-left mr-2"></i> Voltar</button><h2 class="text-lg font-bold screen-title mx-auto">Registrar Medicamento</h2></header><div class="flex-1 p-6 flex flex-col items-center justify-center overflow-y-auto"><div class="w-full max-w-xs space-y-4"><div id="medication-list-container" class="space-y-2"></div><div><label for="medication-name-input" class="screen-subtitle mb-1 block text-sm">Ou digite um novo</label><input id="medication-name-input" type="text" placeholder="Ex: Metformina" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></div><div><label for="medication-dose-input" class="screen-subtitle mb-1 block text-sm">Dosagem</label><input id="medication-dose-input" type="text" placeholder="Ex: 500mg" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></div><div><label for="medication-timestamp-input" class="screen-subtitle mb-1 block text-sm">Data e Hora</label><input type="datetime-local" id="medication-timestamp-input" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></div><div><label for="medication-notes-input" class="screen-subtitle mb-1 block text-sm">Notas</label><textarea id="medication-notes-input" placeholder="Ex: Tomado junto com o café..." rows="3" class="w-full text-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"></textarea></div></div></div><footer class="p-4 border-t"><button class="save-btn w-full font-bold py-3 px-4 primary-btn" data-type="medication"><span class="btn-content">Salvar Medicamento</span><span class="btn-loader"></span><span class="btn-success"><i class="fas fa-check"></i></span></button></footer></div>
         <div id="food-impact-modal" class="detail-modal flex-col pointer-events-auto"><header class="p-4 flex items-center border-b"><button class="close-detail-modal-btn text-purple-500 dark:text-purple-400"><i class="fas fa-chevron-left mr-2"></i> Voltar</button><h2 class="text-lg font-bold screen-title mx-auto">Impacto dos Alimentos</h2></header><div id="food-impact-content" class="flex-1 p-6 overflow-y-auto space-y-4"></div><footer class="p-4 border-t text-center screen-subtitle text-xs">Análise baseada nos últimos 14 dias.</footer></div>
@@ -545,16 +483,7 @@ Encontre o seu listener de clique principal (procure por `document.body.addEvent
                 <div><label for="start-date" class="screen-subtitle mb-1 block text-sm">Data de Início</label><input type="date" id="start-date" class="w-full text-lg p-3"></div>
                 <div><label for="end-date" class="screen-subtitle mb-1 block text-sm">Data de Fim</label><input type="date" id="end-date" class="w-full text-lg p-3"></div>
             </div>
-            <footer class="mt-6 space-y-3">
-                <button id="generate-pdf-btn" class="w-full font-bold py-3 px-4 primary-btn">
-                    <span class="btn-content">Gerar Relatório Completo (com IA)</span>
-                    <span class="btn-loader"></span>
-                    <span class="btn-success"><i class="fas fa-check"></i></span>
-                </button>
-                <button id="generate-glucose-pdf-btn" class="w-full font-bold py-3 px-4 glass-effect screen-title hover:bg-white/20 dark:hover:bg-white/10 rounded-lg transition">
-                    Gerar Apenas Glicemias
-                </button>
-            </footer>
+            <footer class="mt-6"><button id="generate-pdf-btn" class="w-full font-bold py-3 px-4 primary-btn"><span class="btn-content">Gerar Relatório</span><span class="btn-loader"></span><span class="btn-success"><i class="fas fa-check"></i></span></button></footer>
         </div>
     </div>
 
@@ -898,7 +827,7 @@ Encontre o seu listener de clique principal (procure por `document.body.addEvent
                     const isHigh = lastGlucose > 180;
                     
                     const greeting = getGreeting();
-                    const welcomeName = userSettings.displayName ? userSettings.displayName.split(' ')[0] : (currentUser && !currentUser.isAnonymous && currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'Olá');
+                    const welcomeName = currentUser && !currentUser.isAnonymous && currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'Olá';
                     
                     let glucoseColorClass = '';
                     if (isLow) glucoseColorClass = 'glucose-circle-low';
@@ -1126,7 +1055,7 @@ Encontre o seu listener de clique principal (procure por `document.body.addEvent
                          <div class="glass-effect p-4 rounded-2xl mb-4">
                             <h3 class="font-bold screen-title mb-4">Conta</h3>
                             <div class="space-y-3 text-sm">
-                                <div class="flex justify-between items-center screen-subtitle"><span>Nome:</span><input id="setting-display-name" type="text" class="font-semibold bg-transparent text-right w-40 border-b border-white/20 p-1 screen-title" value="${userSettings.displayName || (currentUser && !currentUser.isAnonymous ? currentUser.displayName : 'Usuário Anônimo')}" placeholder="Seu nome"></div>
+                                <div class="flex justify-between items-center screen-subtitle"><span>Nome:</span><span class="font-semibold screen-title">${currentUser && !currentUser.isAnonymous ? currentUser.displayName : 'Usuário Anônimo'}</span></div>
                                 <div class="flex justify-between items-center screen-subtitle"><span>Email:</span><span class="font-semibold screen-title">${currentUser && !currentUser.isAnonymous ? currentUser.email : ''}</span></div>
                             </div>
                         </div>
@@ -1301,9 +1230,6 @@ Encontre o seu listener de clique principal (procure por `document.body.addEvent
                         document.getElementById('search-results').innerHTML = ''; 
                         document.getElementById('meal-notes-input').value = '';
                         document.getElementById('ai-photo-analysis-section').classList.add('hidden');
-if(document.getElementById('manual-food-name-input')) { document.getElementById('manual-food-name-input').value = ''; }
-                        if(document.getElementById('manual-food-carbs-input')) { document.getElementById('manual-food-carbs-input').value = ''; }
-                    }
                     } else if (modalId === 'medication-modal') {
                         document.getElementById('medication-name-input').value = '';
                         document.getElementById('medication-dose-input').value = '';
@@ -1549,7 +1475,7 @@ if(document.getElementById('manual-food-name-input')) { document.getElementById(
                 doc.setFontSize(22);
                 doc.text("Relatório de Glicemia", docWidth / 2, y, { align: 'center' });
                 y += 15;
-                const userName = userSettings.displayName ? userSettings.displayName : (currentUser && !currentUser.isAnonymous && currentUser.displayName ? currentUser.displayName : `Usuário ID: ${currentUser.uid.substring(0,10)}...`);
+                const userName = currentUser && !currentUser.isAnonymous && currentUser.displayName ? currentUser.displayName : `Usuário ID: ${currentUser.uid.substring(0,10)}...`;
                 doc.setFontSize(14); doc.text(userName, 15, y); y += 7;
                 doc.setFontSize(12);
                 const formattedStartDate = startDate.toLocaleDateString('pt-BR'); 
@@ -1716,7 +1642,7 @@ if(document.getElementById('manual-food-name-input')) { document.getElementById(
             }
             
             async function callGeminiAPI(payload, apiKey) {
-                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
                  try {
                    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                    if (!response.ok) {
@@ -1959,142 +1885,6 @@ if(document.getElementById('manual-food-name-input')) { document.getElementById(
                 const applyAndLogBtn = target.closest('#apply-and-log-bolus-btn'); if (applyAndLogBtn && !applyAndLogBtn.disabled) { triggerHapticFeedback('light'); const totalDose = parseFloat(document.getElementById('bolus-total-result').textContent); appState.logHistory.push({ id: Date.now(), timestamp: new Date(), type: 'insulin', value: `${totalDose.toFixed(1)} un (Bolus (Lispro))`, icon: 'fa-syringe', color: 'text-purple-500', rawData: { dose: totalDose, insulinType: 'Bolus (Lispro)', notes: 'Calculado via Calculadora de Bolus' }}); checkAndUnlockAchievements(); saveState(); closeModal('#bolus-calculator-modal'); showToast('Dose de Bolus registrada!'); }
                 const exportPdfBtn = target.closest('#export-pdf-btn'); if (exportPdfBtn) { triggerHapticFeedback('light'); const endDateInput = document.getElementById('end-date'); const startDateInput = document.getElementById('start-date'); const today = new Date(); endDateInput.value = today.toISOString().split('T')[0]; const oneMonthAgo = new Date(); oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1); startDateInput.value = oneMonthAgo.toISOString().split('T')[0]; openModal('#report-date-modal'); }
                 const generatePdfBtn = target.closest('#generate-pdf-btn'); if (generatePdfBtn) { triggerHapticFeedback('light'); const startDateStr = document.getElementById('start-date').value; const endDateStr = document.getElementById('end-date').value; if (!startDateStr || !endDateStr) { showToast("Selecione as duas datas."); return; } const startDate = new Date(startDateStr + 'T00:00:00'); const endDate = new Date(endDateStr + 'T23:59:59'); if (startDate > endDate) { showToast("Data de início inválida."); return; } exportPdfReport(startDate, endDate); }
-const generateGlucosePdfBtn = target.closest('#generate-glucose-pdf-btn');
-                if (generateGlucosePdfBtn) {
-                    triggerHapticFeedback('light');
-                    const startDateStr = document.getElementById('start-date').value;
-                    const endDateStr = document.getElementById('end-date').value;
-                    if (!startDateStr || !endDateStr) { showToast("Selecione as duas datas."); return; }
-                    const startDate = new Date(startDateStr + 'T00:00:00');
-                    const endDate = new Date(endDateStr + 'T23:59:59');
-                    if (startDate > endDate) { showToast("Data de início inválida."); return; }
-                    
-                    exportGlucoseOnlyPdfReport(startDate, endDate, generateGlucosePdfBtn);
-                }
-async function exportGlucoseOnlyPdfReport(startDate, endDate, buttonEl) {
-                if (buttonEl) {
-                    buttonEl.disabled = true;
-                    buttonEl.textContent = 'Gerando...';
-                }
-                showToast("Gerando relatório de glicemias...");
-
-                const { jsPDF } = window.jspdf; 
-                const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-                const docWidth = doc.internal.pageSize.getWidth();
-                let y = 20;
-
-                doc.setFontSize(22);
-                doc.text("Relatório de Glicemia", docWidth / 2, y, { align: 'center' });
-                y += 15;
-                
-                const userName = userSettings.displayName ? userSettings.displayName : (currentUser && !currentUser.isAnonymous && currentUser.displayName ? currentUser.displayName : `Usuário ID: ${currentUser.uid.substring(0,10)}...`);
-                
-                doc.setFontSize(14); doc.text(userName, 15, y); y += 7;
-                doc.setFontSize(12);
-                const formattedStartDate = startDate.toLocaleDateString('pt-BR'); 
-                const formattedEndDate = endDate.toLocaleDateString('pt-BR'); 
-                doc.text(`Período: ${formattedStartDate} a ${formattedEndDate}`, 15, y); y += 10;
-                
-                const glucoseLogs = appState.logHistory.filter(e => e.type === 'glucose' && new Date(e.timestamp) >= startDate && new Date(e.timestamp) <= endDate);
-                if (glucoseLogs.length > 0) {
-                    const avgGlucose = Math.round(glucoseLogs.reduce((a, b) => a + b.rawData.value, 0) / glucoseLogs.length);
-                    const estimatedHba1c = ((avgGlucose + 46.7) / 28.7).toFixed(1);
-                    let hba1cText = `HbA1c Estimada: ${estimatedHba1c}%`;
-                    if (userSettings.manualHba1c && userSettings.manualHba1c.value) {
-                            const updateDate = new Date(userSettings.manualHba1c.date).toLocaleDateString('pt-BR');
-                            hba1cText = `HbA1c (Exame de ${updateDate}): ${userSettings.manualHba1c.value}%`;
-                    }
-                    doc.text(`Glicemia Média: ${avgGlucose} mg/dL`, 15, y); y += 7;
-                    doc.text(hba1cText, 15, y); y += 10;
-                } else {
-                    doc.text("Nenhum registro de glicemia no período.", 15, y); y += 10;
-                }
-
-                if (y > 250) { doc.addPage(); y = 20; }
-                doc.setFontSize(16);
-                doc.setFont(undefined, 'bold');
-                doc.text("Registros de Glicemia", 15, y); y += 10;
-                
-                const logsInPeriod = appState.logHistory.filter(log => {
-                    const logDate = new Date(log.timestamp); 
-                    return log.type === 'glucose' && logDate >= startDate && logDate <= endDate; 
-                });
-
-                if (logsInPeriod.length === 0) {
-                    doc.setFontSize(11);
-                    doc.setFont(undefined, 'normal');
-                    doc.text("Nenhum registro encontrado.", 15, y);
-                } else {
-                    const newGroupedLogs = _.groupBy(logsInPeriod, log => {
-                        const d = new Date(log.timestamp);
-                        return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
-                    });
-                    const sortedDateKeys = Object.keys(newGroupedLogs).sort();
-
-                    doc.setFont(undefined, 'normal');
-                    doc.setTextColor(0,0,0);
-
-                    for (const dateKey of sortedDateKeys) {
-                        const date = new Date(dateKey + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                        const logsForDay = newGroupedLogs[dateKey];
-                        logsForDay.sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-                        if (y > 260) { doc.addPage(); y = 20; }
-                        
-                        doc.setFontSize(12);
-                        doc.setFont(undefined, 'bold');
-                        doc.setFillColor(243, 232, 255);
-                        doc.rect(15, y, docWidth - 30, 8, 'F');
-                        doc.setTextColor(107, 33, 168);
-                        doc.text(date, docWidth / 2, y + 5.5, { align: 'center' });
-                        y += 12;
-
-                        logsForDay.forEach(log => {
-                            if (y > 270) { doc.addPage(); y = 20; }
-                            
-                            const time = new Date(log.timestamp).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-                            
-                            const title = log.rawData.situation && log.rawData.situation !== 'Geral' ? `Glicose (${log.rawData.situation})` : 'Glicose';
-                            const value = log.value;
-
-                            doc.setFontSize(11);
-                            doc.setTextColor(55, 65, 81);
-                            doc.setFont(undefined, 'bold');
-                            doc.text(time, 20, y);
-                            doc.setFont(undefined, 'normal');
-                            doc.text(title, 45, y);
-                            doc.setFont(undefined, 'bold');
-                            doc.text(value, docWidth - 20, y, { align: 'right' });
-                            y += 6;
-                            doc.setFont(undefined, 'normal');
-
-                            let details = '';
-                            if (log.rawData.notes) {
-                                details = `Nota: ${log.rawData.notes}`;
-                            }
-
-                            if (details) {
-                                doc.setFontSize(9);
-                                doc.setTextColor(107, 114, 128);
-                                const splitDetails = doc.splitTextToSize(details, docWidth - 70);
-                                doc.text(splitDetails, 45, y);
-                                y += splitDetails.length * 4;
-                            }
-                            y += 3;
-                        });
-                        y += 5;
-                    }
-                } 
-
-                doc.save(`Relatorio_Glicemia_${formattedStartDate}_a_${formattedEndDate}.pdf`); 
-                showToast("Relatório de Glicemias exportado!");
-                
-                if (buttonEl) {
-                        buttonEl.disabled = false;
-                        buttonEl.textContent = 'Gerar Apenas Glicemias';
-                }
-                closeModal('#report-date-modal');
-            }
                 if (target.closest('#generate-ai-analysis-btn')) { generateAIAnalysis(); }
                 if (target.closest('#generate-dashboard-insight-btn')) { 
                     const button = target.closest('button');
@@ -2201,7 +1991,6 @@ async function exportGlucoseOnlyPdfReport(startDate, endDate, buttonEl) {
                 userSettings.diabetesProfile.diagnosisDate = document.getElementById('setting-diagnosis-date').value;
                 userSettings.diabetesProfile.weight = parseFloat(document.getElementById('setting-weight').value) || userSettings.diabetesProfile.weight;
                 userSettings.diabetesProfile.height = parseFloat(document.getElementById('setting-height').value) || userSettings.diabetesProfile.height;
-                userSettings.displayName = document.getElementById('setting-display-name').value.trim();
                 
                 userSettings.emergencyContact = userSettings.emergencyContact || {};
                 userSettings.emergencyContact.name = document.getElementById('setting-emergency-name').value;
